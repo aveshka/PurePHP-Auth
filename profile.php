@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_password = !empty($_POST['new_password']) ? $_POST['new_password'] : null;
     $confirm_password = $_POST['confirm_password'];
     
-    // Проверка совпадения паролей если меняем
     if ($new_password && $new_password !== $confirm_password) {
         $errors[] = "Пароли не совпадают";
     }

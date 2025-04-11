@@ -1,25 +1,21 @@
 <?php
 require_once 'config.php';
 
-// Регистрация нового пользователя
 function registerUser($name, $email, $phone, $password, $confirm_password) {
     global $pdo;
     
     $errors = [];
     
-    // Проверка совпадения паролей
     if ($password !== $confirm_password) {
         $errors[] = "Пароли не совпадают";
     }
     
-    // Проверка уникальности email
     $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         $errors[] = "Пользователь с таким email уже существует";
     }
     
-    // Проверка уникальности телефона
     $stmt = $pdo->prepare("SELECT id FROM users WHERE phone = ?");
     $stmt->execute([$phone]);
     if ($stmt->fetch()) {
@@ -36,7 +32,6 @@ function registerUser($name, $email, $phone, $password, $confirm_password) {
     return $errors;
 }
 
-// Авторизация пользователя
 function loginUser($login, $password, $captcha_token) {
     global $pdo;
     
@@ -45,7 +40,6 @@ function loginUser($login, $password, $captcha_token) {
         return ["Неверная капча"];
     }
     
-    // Поиск пользователя по email или телефону
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
     $stmt->execute([$login, $login]);
     $user = $stmt->fetch();
@@ -61,7 +55,6 @@ function loginUser($login, $password, $captcha_token) {
     return ["Неверный логин или пароль"];
 }
 
-// Проверка Yandex SmartCaptcha
 function verifyCaptcha($token) {
     if (empty($token)) return false;
     
@@ -86,20 +79,17 @@ function verifyCaptcha($token) {
     return $response && $response->status === 'ok';
 }
 
-// Обновление профиля пользователя
 function updateProfile($user_id, $name, $email, $phone, $new_password = null) {
     global $pdo;
     
     $errors = [];
     
-    // Проверка уникальности email
     $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
     $stmt->execute([$email, $user_id]);
     if ($stmt->fetch()) {
         $errors[] = "Пользователь с таким email уже существует";
     }
     
-    // Проверка уникальности телефона
     $stmt = $pdo->prepare("SELECT id FROM users WHERE phone = ? AND id != ?");
     $stmt->execute([$phone, $user_id]);
     if ($stmt->fetch()) {
@@ -116,7 +106,6 @@ function updateProfile($user_id, $name, $email, $phone, $new_password = null) {
             $stmt->execute([$name, $email, $phone, $user_id]);
         }
         
-        // Обновляем данные в сессии
         $_SESSION['user_name'] = $name;
         $_SESSION['user_email'] = $email;
         $_SESSION['user_phone'] = $phone;
