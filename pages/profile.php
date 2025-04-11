@@ -1,5 +1,7 @@
 <?php
-require_once 'config.php';
+require __DIR__ . '/../utils/config.php';
+require __DIR__ . '/../utils/functions.php';
+
 requireLogin();
 
 $errors = [];
@@ -17,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (empty($errors)) {
-        $result = updateProfile($_SESSION['user_id'], $name, $email, $phone, $new_password);
+        $result = updateProfile($_SESSION['user_id'], $name, $email, 
+        $phone, $new_password);
         
         if ($result === true) {
             $success = true;
@@ -34,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
     <div class="container">
@@ -55,17 +58,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST">
             <div class="form-group">
                 <label for="name">Имя:</label>
-                <input type="text" id="name" name="name" required value="<?= htmlspecialchars($_SESSION['user_name']) ?>">
+                <input type="text" id="name" name="name" required value="
+                <?= htmlspecialchars($_SESSION['user_name']) ?>">
             </div>
             
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_SESSION['user_email']) ?>">
+                <input type="email" id="email" name="email" required value="
+                <?= htmlspecialchars($_SESSION['user_email']) ?>">
             </div>
             
             <div class="form-group">
                 <label for="phone">Телефон:</label>
-                <input type="tel" id="phone" name="phone" required value="<?= htmlspecialchars($_SESSION['user_phone']) ?>">
+                <input type="tel" id="phone" name="phone" required value="
+                <?= htmlspecialchars($_SESSION['user_phone']) ?>">
             </div>
             
             <div class="form-group">

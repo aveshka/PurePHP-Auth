@@ -1,8 +1,8 @@
 <?php
-require_once 'config.php';
+require_once 'utils/config.php';
 
 if (isLoggedIn()) {
-    header("Location: profile.php");
+    header("Location: pages/profile.php");
     exit();
 }
 ?>
@@ -13,12 +13,12 @@ if (isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Добро пожаловать!</h1>
-        <p><a href="login.php">Войти</a> или <a href="register.php">зарегистрироваться</a></p>
+        <p><a href="pages/login.php">Войти</a> или <a href="pages/register.php">зарегистрироваться</a></p>
     </div>
 </body>
 </html>

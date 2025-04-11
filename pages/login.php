@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require __DIR__ . '/../utils/config.php';
+require __DIR__ . '/../utils/functions.php';
 
 $errors = [];
 
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $captcha_token = $_POST['smart-token'];
     
-    $result = loginUser($login, $password, $captcha_token);
+    $result = loginUser($login, $password, $captcha_token,$captchaServerKey);
     
     if ($result === true) {
         header("Location: profile.php");
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/styles.css">
     <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
 </head>
 <body>
@@ -44,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST">
             <div class="form-group">
                 <label for="login">Email или телефон:</label>
-                <input type="text" id="login" name="login" required value="<?= isset($_POST['login']) ? htmlspecialchars($_POST['login']) : '' ?>">
+                <input type="text" id="login" name="login" required value="<?= isset($_POST['login']) ? 
+                htmlspecialchars($_POST['login']) : '' ?>">
             </div>
             
             <div class="form-group">
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="password" name="password" required>
             </div>
             
-            <div id="captcha-container" class="smart-captcha" data-sitekey="<?= CAPTCHA_CLIENT_KEY ?>"></div>
+            <div id="captcha-container" class="smart-captcha" data-sitekey="<?= $captchaClientKey?>"></div>
             
             <button type="submit">Войти</button>
         </form>

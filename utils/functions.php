@@ -32,11 +32,10 @@ function registerUser($name, $email, $phone, $password, $confirm_password) {
     return $errors;
 }
 
-function loginUser($login, $password, $captcha_token) {
+function loginUser($login, $password, $captcha_token, $captchaServerKey) {
     global $pdo;
     
-    // Проверка капчи
-    if (!verifyCaptcha($captcha_token)) {
+    if (!verifyCaptcha($captcha_token, $captchaServerKey)) {
         return ["Неверная капча"];
     }
     
@@ -55,11 +54,11 @@ function loginUser($login, $password, $captcha_token) {
     return ["Неверный логин или пароль"];
 }
 
-function verifyCaptcha($token) {
+function verifyCaptcha($token, $captchaServerKey) {
     if (empty($token)) return false;
     
     $data = [
-        'secret' => CAPTCHA_SERVER_KEY,
+        'secret' => $captchaServerKey,
         'token' => $token,
         'ip' => $_SERVER['REMOTE_ADDR']
     ];
@@ -73,7 +72,8 @@ function verifyCaptcha($token) {
     ];
     
     $context = stream_context_create($options);
-    $result = file_get_contents('https://smartcaptcha.yandexcloud.net/validate', false, $context);
+    $result = file_get_contents('https://smartcaptcha.yandexcloud.net/validate', 
+    false, $context);
     $response = json_decode($result);
     
     return $response && $response->status === 'ok';
